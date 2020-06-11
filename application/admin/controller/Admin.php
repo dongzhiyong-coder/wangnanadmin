@@ -16,7 +16,7 @@ class Admin extends Controller {
     {
         parent::__construct($app);
         //把菜单设置到控制器的模板变量中
-
+        $this->assign('menu_list',Session::get('menu_list'));
     }
 
     protected $middleware = ['auth'];
@@ -29,6 +29,7 @@ class Admin extends Controller {
     //登出功能
     public function logout(){
         Session::set('uid',null);
+        Session::set('username',null);
         Session::set('menu_list',null);
         return redirect('/login/login');
     }

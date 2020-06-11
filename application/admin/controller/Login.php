@@ -25,6 +25,7 @@ class Login extends Controller
         }
         //把用户信息保存到session
         Session::set('uid',$user['user_id']);
+        Session::set('username',$user['user_name']);
         return redirect('/admin/index');
     }
 

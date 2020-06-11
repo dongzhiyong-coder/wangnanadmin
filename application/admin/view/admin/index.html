@@ -2,25 +2,23 @@
 <div class="left-nav">
     <div id="side-nav">
         <ul id="nav">
+            {foreach $menu_list as $key=>$vo }
             <li>
                 <a href="javascript:;">
-                    <i class="iconfont left-nav-li" lay-tips="订单管理">&#xe723;</i>
-                    <cite>订单管理</cite>
+                    <i class="iconfont left-nav-li">&#xe723;</i>
+                    <cite>{$vo.menu_name}</cite>
                     <i class="iconfont nav_right">&#xe697;</i></a>
-                <ul class="sub-menu">
+                    <ul class="sub-menu">
+                    {foreach $vo['child'] as $key=>$v }
                     <li>
-                        <a onclick="xadmin.add_tab('订单列表','order-list.html')">
+                        <a onclick="">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>订单查询</cite></a>
+                            <cite>{$v.menu_name}</cite></a>
                     </li>
-                    <li>
-                        <a onclick="xadmin.add_tab('订单列表1','order-list1.html')">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>条件筛选</cite></a>
-                    </li>
+                    {/foreach}
                 </ul>
             </li>
-
+            {/foreach}
         </ul>
     </div>
 </div>
