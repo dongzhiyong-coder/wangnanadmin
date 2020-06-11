@@ -7,16 +7,13 @@
  */
 
 namespace app\admin\controller;
-
-use think\App;
+use think\facade\Session;
 use think\Controller;
 class Admin extends Controller {
 
-    public function __construct(App $app = null)
-    {
-        parent::__construct($app);
-
-    }
+    protected $middleware = [
+        'auth'     => ['except'   => ['login'] ],
+    ];
 
     //打开登录页面
     public function login(){
@@ -38,6 +35,8 @@ class Admin extends Controller {
         /**
          *用户登录后 需要把他持有的菜单返回给前端页面做显示
          */
+        //把用户信息保存到session
+        Session::set('uid',$user['user_id']);
         return redirect('/admin/index');
     }
 
@@ -45,5 +44,11 @@ class Admin extends Controller {
     public function index(){
         return $this->fetch();
     }
-    
+
+    //登出功能
+    public function logout(){
+        Session::set('uid',null);
+        return redirect('/admin/login');
+    }
+
 }
