@@ -14,6 +14,9 @@ class Auth
         $mysql = new \mysql($db_config);
         //找到登录用户所有的角色
         $roles = $mysql->table('pc_user_role')->where("user_id=".Session::get('uid'))->select();
+        if(empty($roles)){
+            die('用户权限不足');
+        }
         $role_list = [];
         foreach ($roles as $role){
             $role_list[] = $role['role_id'];
@@ -21,8 +24,11 @@ class Auth
         //通过角色找到对应的菜单集合 用In
         $sql = "SELECT menu_id from pc_role_menu where role_id in(".implode(',',$role_list).")";
         $role_menus = $mysql->query($sql);
-        //获取页面菜单
-        $page_menu = $this->getPageMenu($role_menus);
+        $page_menu = [];
+        if(!empty($role_menus)){
+            //获取页面菜单
+            $page_menu = $this->getPageMenu($role_menus);
+        }
         //echo "<pre>";print_r($page_menu);die;
         Session::set('menu_list',$page_menu);
         return $next($request);
