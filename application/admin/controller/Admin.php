@@ -34,4 +34,9 @@ class Admin extends Controller {
         return redirect('/login/login');
     }
 
+    //欢迎页面
+    public function welcome(){
+        return $this->fetch();
+    }
+
 }
