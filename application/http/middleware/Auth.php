@@ -13,24 +13,33 @@ class Auth
         $db_config = require  "../config/db_config.php";
         $mysql = new \mysql($db_config);
         //找到登录用户所有的角色
-        $roles = $mysql->table('pc_user_role')->where("user_id=".Session::get('uid'))->select();
-        if(empty($roles)){
-            die('用户权限不足');
+        if(Session::get('username')!='admin') {
+            //超级管理员 拥有最大的权限
+            $roles = $mysql->table('pc_user_role')->where("user_id=" . Session::get('uid'))->select();
+            if (empty($roles)) {
+                die('用户权限不足');
+            }
+            $role_list = [];
+            foreach ($roles as $role) {
+                $role_list[] = $role['role_id'];
+            }
+            //通过角色找到对应的菜单集合 用In
+            $sql = "SELECT menu_id from pc_role_menu where role_id in(" . implode(',', $role_list) . ")";
+            $role_menus = $mysql->query($sql);
+            $page_menu = [];
+            if (!empty($role_menus)) {
+                //获取页面菜单
+                $page_menu = $this->getPageMenu($role_menus);
+            }
+            Session::set('menu_list', $page_menu);
         }
-        $role_list = [];
-        foreach ($roles as $role){
-            $role_list[] = $role['role_id'];
+        else{
+            $db_config = require  "../config/db_config.php";
+            $mysql = new \mysql($db_config);
+            $menus_list = $mysql->table('pc_menu')->select();
+            $page_menu = $this->getlistMenu($menus_list);
+            Session::set('menu_list', $page_menu);
         }
-        //通过角色找到对应的菜单集合 用In
-        $sql = "SELECT menu_id from pc_role_menu where role_id in(".implode(',',$role_list).")";
-        $role_menus = $mysql->query($sql);
-        $page_menu = [];
-        if(!empty($role_menus)){
-            //获取页面菜单
-            $page_menu = $this->getPageMenu($role_menus);
-        }
-        //echo "<pre>";print_r($page_menu);die;
-        Session::set('menu_list',$page_menu);
         return $next($request);
     }
 
