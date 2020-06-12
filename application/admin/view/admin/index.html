@@ -9,9 +9,9 @@
                     <cite>{$vo.menu_name}</cite>
                     <i class="iconfont nav_right">&#xe697;</i></a>
                     <ul class="sub-menu">
-                    {foreach $vo['child'] as $key=>$v }
+                    {foreach $vo['son'] as $key=>$v }
                     <li>
-                        <a onclick="">
+                        <a href="{$v.menu_router}?{$v.menu_params}">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>{$v.menu_name}</cite></a>
                     </li>
