@@ -49,6 +49,7 @@ class Auth
      * 返回页面菜单
      * @param $menus
      * @param $pid
+     * @return array
      */
     public function getlistMenu($menus,$pid=0)
     {
